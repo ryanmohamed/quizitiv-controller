@@ -5,12 +5,29 @@ GEM
       public_suffix (>= 2.0.2, < 6.0)
     concurrent-ruby (1.2.2)
     dotenv (2.8.1)
-    faraday (2.7.4)
-      faraday-net_http (>= 2.0, < 3.1)
+    faraday (1.10.3)
+      faraday-em_http (~> 1.0)
+      faraday-em_synchrony (~> 1.0)
+      faraday-excon (~> 1.1)
+      faraday-httpclient (~> 1.0)
+      faraday-multipart (~> 1.0)
+      faraday-net_http (~> 1.0)
+      faraday-net_http_persistent (~> 1.0)
+      faraday-patron (~> 1.0)
+      faraday-rack (~> 1.0)
+      faraday-retry (~> 1.0)
       ruby2_keywords (>= 0.0.4)
-    faraday-net_http (3.0.2)
-    faraday-retry (2.1.0)
-      faraday (~> 2.0)
+    faraday-em_http (1.0.0)
+    faraday-em_synchrony (1.0.0)
+    faraday-excon (1.1.0)
+    faraday-httpclient (1.0.1)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
+    faraday-net_http (1.0.1)
+    faraday-net_http_persistent (1.2.0)
+    faraday-patron (1.0.0)
+    faraday-rack (1.0.0)
+    faraday-retry (1.0.3)
     gapic-common (0.18.0)
       faraday (>= 1.9, < 3.a)
       faraday-retry (>= 1.0, < 3.a)
@@ -54,13 +71,22 @@ GEM
     grpc (1.53.0)
       google-protobuf (~> 3.21)
       googleapis-common-protos-types (~> 1.0)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     jwt (2.7.0)
     memoist (0.16.2)
+    mini_mime (1.1.2)
     multi_json (1.15.0)
+    multi_xml (0.6.0)
+    multipart-post (2.3.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
+    nio4r (2.5.9)
     os (1.1.4)
     public_suffix (5.0.1)
+    puma (6.2.1)
+      nio4r (~> 2.0)
     rack (2.2.6.4)
     rack-protection (3.0.5)
       rack
@@ -84,6 +110,9 @@ PLATFORMS
 DEPENDENCIES
   dotenv
   google-cloud-firestore
+  httparty
+  jwt
+  puma
   sinatra
 
 BUNDLED WITH

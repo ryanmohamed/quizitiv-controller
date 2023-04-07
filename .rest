@@ -1,5 +1,6 @@
 POST http://localhost:4567/submit_answers
 Content-Type: application/json
+Authorization: Bearer sdsdf
 
 {
   "quiz_id": "somequizid",
