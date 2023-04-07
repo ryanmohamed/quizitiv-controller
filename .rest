@@ -1,0 +1,16 @@
+POST http://localhost:4567/submit_answers
+Content-Type: application/json
+
+{
+  "quiz_id": "somequizid",
+  "answers": "['a', 'b', 'a']"
+}
+
+GET http://localhost:4567/firestore
+Content-Type: application/json
+
+{
+  "quiz_id": "somequizid",
+  "answers": "['a', 'b', 'a']"
+}
+
