@@ -3,8 +3,8 @@
 ---
 ## Run `bundle install` to download dependencies. 
 ---
-Find the client-side repo [here](https://github.com/ryanmohamed/quizitiv)
-
+## Find the client-side repo [here](https://github.com/ryanmohamed/quizitiv)
+---
 ### Dependency rationale
   1. `gem 'sinatra'`
     Sinatra, fast to get rolling, easy to scale, complex tasks in Rails not required in Quizitiv web app architecture.
