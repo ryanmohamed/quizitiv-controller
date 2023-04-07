@@ -1,5 +1,5 @@
-# Quizitiv-Controller
-###  Controller for MVC architecture. 
+# Quizitiv Controller
+###  Controller for Quizitiv's MVC architecture 
 ### Built with Sinatra.
 ---
 ## Run `bundle install` to download dependencies. 
