@@ -12,5 +12,3 @@
   
   2. `google-cloud-firestore`
     Google Cloud Firestore for accessing Firestore database for CRUD operations. 
-  3. `firebase_admin`
-    Verification of tokens sent by client on controller actions. Token initially sent by Firebase as it handles authentication. 
