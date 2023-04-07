@@ -1,6 +1,9 @@
 source 'https://rubygems.org'
 gem 'sinatra'
+gem 'puma'
 gem 'google-cloud-firestore'
-gem 'firebase_admin'
+gem 'jwt'
+gem 'httparty'
 gem 'dotenv'
+
 
