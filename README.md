@@ -1,7 +1,9 @@
 # Quizitiv-Controller
-Controller for MVC architecture. Built with Sinatra.
+## Controller for MVC architecture. Built with Sinatra.
 ---
 ## Run `bundle install` to download dependencies. 
+---
+Find the client-side repo [here](https://github.com/ryanmohamed/quizitiv)
 
 ### Dependency rationale
   1. `gem 'sinatra'`
