@@ -13,6 +13,17 @@ credentials_hash = JSON.parse credentials_json
 ENV['FIRESTORE_PROJECT_ID'] = credentials_hash['project_id']
 JWT_HASH_ALGO = "RS256".freeze # firebase uses an RS256 hash, set a constant variable
 
+# establish firestore client with credentials 
+firestore = Google::Cloud::Firestore.new(
+    project_id: ENV['FIRESTORE_PROJECT_ID'],
+    credentials: ENV['GOOGLE_APPLICATION_CREDENTIALS']
+)
+if not defined? firestore 
+    raise StandardError.new "Could not connect to Firestore..."
+else
+    print "Sucessfully connected to Quizitiv Firestore...\n"
+end
+
 # we're gonna need to validate firebase tokens sent by clients
 # but no official sdk to solve this problem
 # thanks to ryuta hamasaki for the original idea and explanation @ https://ryutahamasaki.com/posts/verify-firebase-auth-jwt-with-ruby/
@@ -58,7 +69,11 @@ end
 
 def verify_jwt(token, public_key)
     firebase_project_id = ENV['FIRESTORE_PROJECT_ID']
+
+    leeway = 60 * 60 * 24 * 0.5 # 1/2 days, token must have been created within 12 hours
+
     options = {
+        exp_leeway: leeway,
         algorithm: "RS256",
         verify_iat: true,
         verify_aud: true, 
@@ -86,7 +101,7 @@ end
 before do 
     content_type :json
     unless request.env['HTTP_AUTHORIZATION']
-        halt 401, { message: "You are missing an Authorization header..." }.to_json
+        halt 401, { message: "You are missing an Authorization header." }.to_json
     end
     token = request.env['HTTP_AUTHORIZATION'].split(' ').last
     if token
@@ -98,44 +113,38 @@ before do
             verify_jwt token, get_public_key(decoded_token_header["kid"])
         end
     end
-end
-
-
-# establish firestore client with credentials 
-firestore = Google::Cloud::Firestore.new(
-    project_id: ENV['FIRESTORE_PROJECT_ID'],
-    credentials: ENV['GOOGLE_APPLICATION_CREDENTIALS']
-)
-if not defined? firestore 
-    raise StandardError.new "Could not connect to Firestore..."
-else
-    print "Sucessfully connected to Quizitiv Firestore...\n"
+    if not defined? firestore
+        halt 503, "Server unable to access database..."
+    end
 end
 
 # submit answers 
 post '/submit_answers' do 
-    # Rack::Request and Rack:: Response
-    # params = hash request parameters
-    # on http request, hash of info is passed as env
-    # convert json into hash
+    # middleware verifies the Firebase connection & JWT token in Authorization header
+    body = JSON.parse(request.body.read)
+    quiz_id = body["quiz_id"] # string
+    answers = body["answers"] # array 
 
-    # if not defined? firestore
-    #     halt 503, "Server unable to access database..."
-    # end
+    # now that we have the firebase connection & JWT token, we can fetch the answers for this quiz
+    quiz_snapshot = firestore.doc("Quizzes/#{quiz_id}").get
+    halt 404, { message: "Quiz not found." }.to_json unless quiz_snapshot.exists?
+    quiz_data = quiz_snapshot.data
 
-    # body = JSON.parse(request.body.read)
-    # token = request.env['HTTP_AUTHORIZATION'].split(' ').last
-    # quiz_id = body["quiz_id"] # string
-    # answers = body["answers"] # array 
+    # fetch answers from firebase and count correct answers
+    answer_key = Array.new
+    quiz_data[:questions].each { |question| answer_key.push (question[:answer].downcase()) }
+    score = (answer_key & answers).length # take intersection of two arrays
 
-    # content_type :json
-    # return { message: "Request succesful", data: "Some data"}.to_json
+    print score, "\n"
+
+    content_type :json
+    return { message: "Request succesful", data: "Some data"}.to_json
 end
 
-# get '/firestore' do 
+get '/firestore' do 
 
-#     user_col =firestore.col('Users')
-#     users = user_col.get
-#     users.each { |user| print user }
+    user_col =firestore.col('Users')
+    users = user_col.get
+    users.each { |user| print user }
 
-# end
+end
