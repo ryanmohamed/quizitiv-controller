@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'json'
 require 'google/cloud/firestore' 
+require "google/cloud/error_reporting"
 require 'httparty'
 require 'jwt'
 require 'dotenv/load'
@@ -122,6 +123,7 @@ end
 post '/submit_answers' do 
     # middleware verifies the Firebase connection & JWT token in Authorization header
     body = JSON.parse(request.body.read)
+    uid = body["uid"]
     quiz_id = body["quiz_id"] # string
     answers = body["answers"] # array 
 
@@ -135,10 +137,31 @@ post '/submit_answers' do
     quiz_data[:questions].each { |question| answer_key.push (question[:answer].downcase()) }
     score = (answer_key & answers).length # take intersection of two arrays
 
-    print score, "\n"
+    # update this quiz data
+    user_ref = nil
+    begin
+        user_ref = firestore.doc("Users/#{uid}")
+    rescue Google::Cloud::NotFoundError
+        halt 404, { message: "User not found." }.to_json
+    end
+
+    # update user's score information, only if they have none defined already, can only submit first attempt
+    user_snapshot = user_ref.get
+    if user_snapshot.exists?
+        user_scores = user_snapshot.data[:scores]
+        user_xp = user_snapshot.data[:xp]
+            
+        # update db only if first attempt, we still need to return a score even on repeated submissions so no halting
+        if user_scores.none? {|score_record| score_record[:id] == quiz_id }
+            new_score = { id: quiz_id, score: score, rating: 0 }
+            # we'll only update the xp if the quiz wasn't created by this user
+            new_xp = quiz_data[:uid] == uid ? user_xp : user_xp + (score*10)
+            user_ref.set( {scores: user_scores + [new_score], xp: new_xp} , merge: true)
+        end
+    end
 
     content_type :json
-    return { message: "Request succesful", data: "Some data"}.to_json
+    return { message: "Scoring performed!", score: "#{score}"}.to_json
 end
 
 get '/firestore' do 

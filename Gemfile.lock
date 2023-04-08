@@ -41,6 +41,14 @@ GEM
       google-cloud-errors (~> 1.0)
     google-cloud-env (1.6.0)
       faraday (>= 0.17.3, < 3.0)
+    google-cloud-error_reporting (0.42.2)
+      concurrent-ruby (~> 1.1)
+      google-cloud-core (~> 1.5)
+      google-cloud-error_reporting-v1beta1 (~> 0.0)
+      stackdriver-core (~> 1.3)
+    google-cloud-error_reporting-v1beta1 (0.6.0)
+      gapic-common (>= 0.18.0, < 2.a)
+      google-cloud-errors (~> 1.0)
     google-cloud-errors (1.3.1)
     google-cloud-firestore (2.11.0)
       concurrent-ruby (~> 1.0)
@@ -71,9 +79,14 @@ GEM
     grpc (1.53.0)
       google-protobuf (~> 3.21)
       googleapis-common-protos-types (~> 1.0)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     jwt (2.7.0)
     memoist (0.16.2)
+    mini_mime (1.1.2)
     multi_json (1.15.0)
+    multi_xml (0.6.0)
     multipart-post (2.3.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
@@ -97,6 +110,8 @@ GEM
       rack (~> 2.2, >= 2.2.4)
       rack-protection (= 3.0.5)
       tilt (~> 2.0)
+    stackdriver-core (1.5.0)
+      google-cloud-core (~> 1.2)
     tilt (2.1.0)
 
 PLATFORMS
@@ -104,7 +119,9 @@ PLATFORMS
 
 DEPENDENCIES
   dotenv
+  google-cloud-error_reporting
   google-cloud-firestore
+  httparty
   jwt
   puma
   sinatra
