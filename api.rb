@@ -2,9 +2,8 @@ require 'sinatra'
 require 'json'
 require 'google/cloud/firestore' 
 require "google/cloud/error_reporting"
-require 'httparty'
-require 'jwt'
 require 'dotenv/load'
+require_relative 'verify-jwt'
 
 # read json from file path, turn into hash
 credentials_json = File.read ENV['GOOGLE_APPLICATION_CREDENTIALS']
@@ -12,7 +11,6 @@ credentials_hash = JSON.parse credentials_json
 
 # create environment variables & constants
 ENV['FIRESTORE_PROJECT_ID'] = credentials_hash['project_id']
-JWT_HASH_ALGO = "RS256".freeze # firebase uses an RS256 hash, set a constant variable
 
 # establish firestore client with credentials 
 firestore = Google::Cloud::Firestore.new(
@@ -23,79 +21,6 @@ if not defined? firestore
     raise StandardError.new "Could not connect to Firestore..."
 else
     print "Sucessfully connected to Quizitiv Firestore...\n"
-end
-
-# we're gonna need to validate firebase tokens sent by clients
-# but no official sdk to solve this problem
-# thanks to ryuta hamasaki for the original idea and explanation @ https://ryutahamasaki.com/posts/verify-firebase-auth-jwt-with-ruby/
-# follows directly from what is stated here... https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_a_third-party_jwt_library
-# reinterpreted slightly 
-
-def decode_header (token) # => decoded JSON header
-    halt 401, { message: 'Could not decode token. Invalid format.' }.to_json unless token.include? '.'
-    encoded_header = token.split('.').first
-    begin
-        return JSON.parse(Base64.decode64(encoded_header))
-    rescue 
-        halt 401, { message: "Could not decode token. Not Base64 encoded." }.to_json
-    end
-end
-
-def check_algo (decoded_header) # => halts execution if header is not jwt encoded
-    alg = decoded_header["alg"]
-    if alg != JWT_HASH_ALGO
-        halt 401, { message: "Invalid token algorithm #{alg}. Expected #{JWT_HASH_ALGO}." }.to_json
-    end
-end
-
-def get_public_key(kid)
-    # fetch public key from firebase
-    public_key_url = "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com".freeze
-    response = HTTParty.get(public_key_url)
-    
-    unless response.success?
-        halt 503, "Failed to fetch JWT public keys from Google."
-    end
-
-    public_keys = response.parsed_response
-
-    # todo: cache public keys
-
-    unless public_keys.include?(kid)
-        halt 503, "Invalid token 'kid' header, does not match valid public key."
-    end
-
-    return OpenSSL::X509::Certificate.new(public_keys[kid]).public_key
-end
-
-def verify_jwt(token, public_key)
-    firebase_project_id = ENV['FIRESTORE_PROJECT_ID']
-
-    leeway = 60 * 60 * 24 * 0.5 # 1/2 days, token must have been created within 12 hours
-
-    options = {
-        exp_leeway: leeway,
-        algorithm: "RS256",
-        verify_iat: true,
-        verify_aud: true, 
-        aud: firebase_project_id,
-        verify_iss: true,
-        iss: "https://securetoken.google.com/#{firebase_project_id}"
-    }
-    # error handling for decoding the jwt token
-    begin
-        return JWT.decode(token, public_key, true, options)
-    rescue JWT::ExpiredSignature => e
-        halt 401, { message: "Token is expired." }.to_json
-    rescue JWT::InvalidIssuerError => e
-        halt 401, { message: "Token was not issued by firebase project." }.to_json
-    rescue JWT::InvalidAudError => e
-        halt 401, { message: "Token has invalid audience." }.to_json
-    rescue JWT::InvalidAlgorithmError => e
-        halt 401, { message: "Token uses incorrect algorithm." }.to_json
-    rescue => e
-        halt 401, { message: "An error occured decoding token." }.to_json
-    end
 end
 
 # middleware to check if authorization is an actual user from the database
@@ -145,6 +70,8 @@ post '/submit_answers' do
         halt 404, { message: "User not found." }.to_json
     end
 
+    s = "Scoring performed."
+
     # update user's score information, only if they have none defined already, can only submit first attempt
     user_snapshot = user_ref.get
     if user_snapshot.exists?
@@ -156,18 +83,61 @@ post '/submit_answers' do
             new_score = { id: quiz_id, score: score, rating: 0 }
             # we'll only update the xp if the quiz wasn't created by this user
             new_xp = quiz_data[:uid] == uid ? user_xp : user_xp + (score*10)
-            user_ref.set( {scores: user_scores + [new_score], xp: new_xp} , merge: true)
+            begin
+                user_ref.set( {scores: user_scores + [new_score], xp: new_xp} , merge: true )
+            rescue => e
+                halt 500, { message: "An error occured while updating user score." }.to_json
+            end
+            s = "Score submitted. Succesfully wrote to database."
         end
     end
 
     content_type :json
-    return { message: "Scoring performed!", score: "#{score}"}.to_json
+    return { message: s, score: "#{score}"}.to_json
 end
 
-get '/firestore' do 
+post '/submit_rating' do # max 2 reads 2 writes
 
-    user_col =firestore.col('Users')
-    users = user_col.get
-    users.each { |user| print user }
+    # middleware verifies the Firebase connection & JWT token in Authorization header
+    body = JSON.parse(request.body.read)
+    uid = body["uid"]
+    quiz_id = body["quiz_id"] # string
+    rating = body["rating"] # integer 
+
+    # fetch the user first, practice strong exception handling
+    user_ref = firestore.doc("Users/#{uid}")
+    user_snapshot = user_ref.get
+    halt 404, { message: "User not found." }.to_json unless user_snapshot.exists?
+
+    # update user's individual score rating, for quick reloads in view
+    user_scores = user_snapshot.data[:scores]
+    halt 400, { message: "User has never taken quiz before or has rated it already."}.to_json unless user_scores.any? {|score_record| score_record[:id] == quiz_id and score_record[:rating].to_i == 0 }
+
+    idx = user_scores.find_index {|score_record| score_record[:id] == quiz_id }
+    new_score = { id: quiz_id, score: user_scores[idx][:score], rating: rating }
+    user_scores[idx] = new_score
+    begin
+        user_ref.set( {scores: user_scores}, merge: true )
+    rescue => e
+        halt 500, { message: "Error: #{e.message}" }.to_json
+    end
+
+    # fetch quiz and update it's tracking data  
+    quiz_ref = firestore.doc("Quizzes/#{quiz_id}")
+    quiz_snapshot = quiz_ref.get
+    halt 404, { message: "Quiz not found." }.to_json unless quiz_snapshot.exists?
+   
+    prev_rating = quiz_snapshot.data[:rating].to_f
+    prev_attempts = quiz_snapshot.data[:attempts].to_i
+    new_rating = (prev_rating + rating.to_f)/2.0
+
+    begin
+        quiz_ref.set( { attempts: prev_attempts + 1, rating: new_rating }, merge: true )
+    rescue => e
+        halt 500, { message: "Error: #{e.message}" }.to_json
+    end
+
+    content_type :json
+    return { message: "Rating submitted!", new_rating: "#{new_rating}", attempts: "#{prev_attempts+1}"}.to_json
 
 end
