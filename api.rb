@@ -164,10 +164,48 @@ post '/submit_answers' do
     return { message: "Scoring performed!", score: "#{score}"}.to_json
 end
 
-get '/firestore' do 
+post '/submit_rating' do # max 2 reads 2 writes
 
-    user_col =firestore.col('Users')
-    users = user_col.get
-    users.each { |user| print user }
+    # middleware verifies the Firebase connection & JWT token in Authorization header
+    body = JSON.parse(request.body.read)
+    uid = body["uid"]
+    quiz_id = body["quiz_id"] # string
+    rating = body["rating"] # integer 
+
+    # fetch the user first, practice strong exception handling
+    user_ref = firestore.doc("Users/#{uid}")
+    user_snapshot = user_ref.get
+    halt 404, { message: "User not found." }.to_json unless user_snapshot.exists?
+
+    # update user's individual score rating, for quick reloads in view
+    user_scores = user_snapshot.data[:scores]
+    halt 400, { message: "User has never taken quiz before or has rated it already."}.to_json unless user_scores.any? {|score_record| score_record[:id] == quiz_id and score_record[:rating].to_i == 0 }
+
+    idx = user_scores.find_index {|score_record| score_record[:id] == quiz_id }
+    new_score = { id: quiz_id, score: user_scores[idx][:score], rating: rating }
+    user_scores[idx] = new_score
+    begin
+        user_ref.set( {scores: user_scores}, merge: true )
+    rescue => e
+        halt 500, { message: "Error: #{e.message}" }.to_json
+    end
+
+    # fetch quiz and update it's tracking data  
+    quiz_ref = firestore.doc("Quizzes/#{quiz_id}")
+    quiz_snapshot = quiz_ref.get
+    halt 404, { message: "Quiz not found." }.to_json unless quiz_snapshot.exists?
+   
+    prev_rating = quiz_snapshot.data[:rating].to_f
+    prev_attempts = quiz_snapshot.data[:attempts].to_i
+    new_rating = (prev_rating + rating.to_f)/2.0
+
+    begin
+        quiz_ref.set( { attempts: prev_attempts + 1, rating: new_rating }, merge: true )
+    rescue => e
+        halt 500, { message: "Error: #{e.message}" }.to_json
+    end
+
+    content_type :json
+    return { message: "Rating submitted!", new_rating: "#{new_rating}", attempts: "#{prev_attempts+1}"}.to_json
 
 end
