@@ -57,8 +57,6 @@ post '/submit_answers' do
     quiz_id = body["quiz_id"] # string
     answers = body["answers"] # array 
 
-    # todo: implement caching of answers based on quizzes (redis or in-memory) 
-
     # now that we have the firebase connection & JWT token, we can fetch the answers for this quiz
     quiz_snapshot = firestore.doc("Quizzes/#{quiz_id}").get
     halt 404, { message: "Quiz not found." }.to_json unless quiz_snapshot.exists?
