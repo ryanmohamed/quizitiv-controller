@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "quizitiv-project",
+  "private_key_id": "ecb045f007b2564af8d775db65c233488f5c952f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDqnRGCKiPUDZzy\nh60FY5WapLmEDMYSKd92qBmRzFxFz+m4NYuVZKpwLyUWv4bvWKIdaH2epDxyUuaL\nLn5s0WXXdWbTH17YRt9ob2Ala2olpiTeB7r/agoCPL0sYElapgdukk9w8EkwAlpC\nNDhMJBv6c+lHZEODAWyoitTNn9fPT/BWz+/RCpFKrAL9ICPMRjrQ/dKJS6qyE7Xk\nsd/sdsA62rTCBjLIGqmgoKCIFExswt1T+6ZV9L4Ixy/+AeWoUwkZYXDMn2gSmDvo\nr26skpk3EXw8HjedTX4dCLs2QAZVV5rtaP4smOHNqISrcENacDqUj1Y/npL59Omc\nRLzQ9gGXAgMBAAECggEAWHw75cFZ+PjXaFuGhKFOA+C7vVOKAsC7MMfuuOAALy5e\n4mSDjClG5P/K97ztuejOX9QQiNw9lgqxO+4hrY3+YJg9W0QaI+z7Bqr28rYD90Yl\n4n285+cI9lYNLSb1k5RJ+kiBYMGngM1qWEzUrNbznG7KHWxxz/+iCSEvaIwwO1Yc\nhxyoQmhkgO7sgUJ+7vewQmkKIzK6I2yzKqc3z4hmYYnOE7xIkTK4R3XQrV3fEmZH\nIDHjwPwpdZvR1HbMJb2iIH995TZZT9EG50BqCNQevVppxt5y9OAfIw/p3TJGV1jI\nun0LV1njq92mvDasKI7KGLBH0xI132NLSEVaLF2zXQKBgQD8mERlOzb6M5nF7Cxt\nLVxVA9j8N6AmVWU+amzFRw2XTB6IHC/4Q6D7GcC9toCZBE9ZgbHbuVnpvyCeV8DY\n+2zdhDiVyjqzp/0fQfJmRzB9FoxbGcE6B7rd0JOMGnit1Q74IMjB5jChwbwoCKp8\nqYQqPj8c1Hm44gKuUMQpT0wh6wKBgQDtxr71zkf5HbdN7kV+5SYMiR74LHgLVVW6\nCI+uJ1Jyo5fEqv2rkzcwmAO0UvTfA3THOa1b/VMovcf8jpZCx7c6dYx3I7hD2r5B\nmN9KeK1Cgq6zgzBWiESxzNZ9NwbQL4yiXzIjApeXikfsE7TlP0UOFwSDpM0bkyrU\nv89zZb4IBQKBgQCC8Jf79h9AwkEDhbNeATas52qzDE7bsEbkfRzXg0a7WH03R41i\nYARyRl5Queud5ssPdhjx8vp2HlrVWl4g3O0JQ8Jle8jEWt/vNStn851iKq8lhotQ\n/rLSy43BAfPvANRasfv/78jkAV79Tci7CND3aP8kfcx/l8GWBU46r92icwKBgQC5\nfOJ5NKuW3aSiia7zF+V/v/RF28Ll7HMMxiL307sQrSf3BwEOuLBEG0JAiLp3wuV1\niTwA1/TogmwhTEZR4CTC2PJz+oyDeoATAiOmn89hZDrO1Rd/WZxlK4tjcOrCu2U1\nQZgGEb6aPAhxVMo4UAwZusENxSEwUrUF9H/r4MHG1QKBgQC+UV3nAYUV1powU2AN\nC1zayWW4hTNq2YmNqYX4H65cogapgYOH+EAH9zhZnqLJ6mTCXcwNSaUhfLQpgIcI\nkwSTvUBD1v+oKIlkWxOUnbYp2bm4l3hDXD8nrkqJC4TBKuVRMY7JbxD9ZGhXUzWQ\nWc4uLUnFyKjw36KhT48Ca4eOfA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-chvy2@quizitiv-project.iam.gserviceaccount.com",
+  "client_id": "115361993619008799208",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-chvy2%40quizitiv-project.iam.gserviceaccount.com"
+}
