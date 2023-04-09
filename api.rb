@@ -46,7 +46,7 @@ end
 
 get '/' do 
     content_type :json
-    return 200, { message: "Hello from Controller!" }.to_json
+    return { message: "Hello from Controller!" }.to_json
 end
 
 # submit answers 
