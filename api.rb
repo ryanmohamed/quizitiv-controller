@@ -44,6 +44,11 @@ before do
     end
 end
 
+get '/' do 
+    content_type :json
+    return 200, { message: "Hello from Controller!" }.to_json
+end
+
 # submit answers 
 post '/submit_answers' do 
     # middleware verifies the Firebase connection & JWT token in Authorization header
