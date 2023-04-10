@@ -1,4 +1,4 @@
-require 'rack/handler/puma'
+require 'rack/config'
 
 workers Integer(2)
 threads_count = Integer(5)
