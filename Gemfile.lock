@@ -111,6 +111,7 @@ DEPENDENCIES
   httparty
   jwt
   puma
+  rack
   sinatra
 
 BUNDLED WITH
