@@ -1,3 +1,3 @@
 require_relative "./app"
 
-run Sinatra.application
+run Sinatra::application
