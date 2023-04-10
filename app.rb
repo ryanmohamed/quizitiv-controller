@@ -4,7 +4,7 @@ require 'google/cloud/firestore'
 require "google/cloud/error_reporting"
 require 'dotenv/load'
 require_relative 'verify-jwt'
- 
+#
 # read json from file path, turn into hash
 credentials_json = File.read ENV['GOOGLE_APPLICATION_CREDENTIALS']
 credentials_hash = JSON.parse credentials_json
