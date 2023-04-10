@@ -11,7 +11,7 @@ credentials_hash = JSON.parse credentials_json
 
 # create environment variables & constants
 ENV['FIRESTORE_PROJECT_ID'] = credentials_hash['project_id']
-#
+
 # establish firestore client with credentials 
 firestore = Google::Cloud::Firestore.new(
     project_id: ENV['FIRESTORE_PROJECT_ID'],
