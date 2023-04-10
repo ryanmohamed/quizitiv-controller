@@ -3,3 +3,4 @@ keys.json
 .rest
 .DS_Store
 tests.txt
+google-credentials.json
