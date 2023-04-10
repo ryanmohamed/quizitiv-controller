@@ -44,7 +44,7 @@ before do
     end
 end
 
-#
+
 get '/' do 
     content_type :json
     return { message: "Hello from Controller!" }.to_json
