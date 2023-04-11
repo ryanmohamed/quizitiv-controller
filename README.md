@@ -1,5 +1,6 @@
 # Quizitiv Controller
 ###  Controller for Quizitiv's MVC architecture 
+(Deploy)[https://quizitiv-controller.herokuapp.com/submit_answers]
 ### Built with Sinatra.
 ---
 ## Run `bundle install` to download dependencies. 
