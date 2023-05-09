@@ -1,0 +1,11 @@
+# pack-refs with: peeled fully-peeled sorted 
+523b23d703c02ce545eca529d1c0f2c0b5845c75 refs/heads/capitalization-fix
+be66a278c30c707988bd863a940046472b70de27 refs/heads/intersection-fix
+f502ed95c2b593a867ace6b1993565df925c3f04 refs/heads/jwt-auth
+0cdcdc6f843b85bb9535e5aac1eff25cc3f32b43 refs/heads/main
+243e06478048c0f00987a9609c6975dde39a4458 refs/heads/rating
+741197778305f398a3cd4e52751d18fec10ddba3 refs/pull/1/head
+f502ed95c2b593a867ace6b1993565df925c3f04 refs/pull/2/head
+243e06478048c0f00987a9609c6975dde39a4458 refs/pull/3/head
+523b23d703c02ce545eca529d1c0f2c0b5845c75 refs/pull/4/head
+be66a278c30c707988bd863a940046472b70de27 refs/pull/7/head
