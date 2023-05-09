@@ -63,7 +63,7 @@ post '/submit_answers' do
     halt 404, { message: "Quiz not found." }.to_json unless quiz_snapshot.exists?
     quiz_data = quiz_snapshot.data
 
-    # fetch answers from firebase and count correct answers
+    # fetch answers from firebase and count correct answers (can possibly replace with some kind of count function)
     answer_key = Array.new
     quiz_data[:questions].each { |question| answer_key.push (question[:answer].downcase()) }
     score = (answer_key & answers.map! { |answer| answer.downcase() } ).length # take intersection of the two arrays
