@@ -66,7 +66,7 @@ post '/submit_answers' do
     # fetch answers from firebase and count correct answers
     answer_key = Array.new
     quiz_data[:questions].each { |question| answer_key.push (question[:answer].downcase()) }
-    score = (answer_key & answers).length # take intersection of two arrays
+    score = (answer_key & answers).length # take intersection of the two arrays
 
     # update this quiz data
     user_ref = nil
