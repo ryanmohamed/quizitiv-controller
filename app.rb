@@ -65,15 +65,16 @@ post '/submit_answers' do
 
     # fetch answers from firebase and count correct answers (can possibly replace with some kind of count function)
     # remove all whitespace and downcase both operands
-    answer_key = Array.new
-    quiz_data[:questions].each { |question| answer_key.push (question[:answer].downcase().gsub(/\s+/, "") ) }
+    answer_key = Array.new # original answer for client
+    quiz_data[:questions].each { |question| answer_key.push (question[:answer] ) }
+    parsed_answer_key = answer_key.map! { |ans| ans.downcase().gsub(/\s+/, "") }
     
     # error out if # of answers != answer_key length
     halt 400, { message: "Number of answers provided do not match the number that appear in answer key."}.to_json unless answer_key.length == answers.length
 
     # count # of matches
     score = 0
-    answer_key.each_with_index { |ans, idx| score += ans == answers[idx].downcase().gsub(/\s+/, "") ? 1 : 0 }
+    parsed_answer_key.each_with_index { |ans, idx| score += ans == answers[idx].downcase().gsub(/\s+/, "") ? 1 : 0 }
 
     # update this quiz data
     user_ref = nil
