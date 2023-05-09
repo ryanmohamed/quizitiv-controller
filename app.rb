@@ -67,7 +67,8 @@ post '/submit_answers' do
     # remove all whitespace and downcase both operands
     answer_key = Array.new # original answer for client
     quiz_data[:questions].each { |question| answer_key.push (question[:answer] ) }
-    parsed_answer_key = answer_key.map! { |ans| ans.downcase().gsub(/\s+/, "") }
+    parsed_answer_key = Array.new
+    answer_key.each { |ans| parsed_answer_key,push (ans.downcase().gsub(/\s+/, "")) }
     
     # error out if # of answers != answer_key length
     halt 400, { message: "Number of answers provided do not match the number that appear in answer key."}.to_json unless answer_key.length == answers.length
