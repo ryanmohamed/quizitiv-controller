@@ -22,8 +22,8 @@ if not defined? firestore
 else
     print "Sucessfully connected to Quizitiv Firestore...\n"
 end
-
-# middleware to check if authorization is an actual user from the database
+ 
+# middleware to check if authorization is an actual user from the db
 before do 
     content_type :json
     unless request.env['HTTP_AUTHORIZATION']
