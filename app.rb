@@ -69,7 +69,7 @@ post '/submit_answers' do
     quiz_data[:questions].each { |question| answer_key.push (question[:answer].downcase().gsub(/\s+/, "") ) }
     
     # if # of answers != answer_key
-    halt 400 { message: "Number of answers provided do not match the number that appear in answer key."}.to_json unless answer_key.length == answer.length
+    halt 400, { message: "Number of answers provided do not match the number that appear in answer key."}.to_json unless answer_key.length == answer.length
 
     # count occurences of matching answers
     score = 0
