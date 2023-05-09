@@ -68,12 +68,12 @@ post '/submit_answers' do
     answer_key = Array.new
     quiz_data[:questions].each { |question| answer_key.push (question[:answer].downcase().gsub(/\s+/, "") ) }
     
-    # error out if # of answers != answer_key length
-    halt 400, { message: "Number of answers provided do not match the number that appear in answer key."}.to_json unless answer_key.length == answers.length
+    # if # of answers != answer_key
+    halt 400 { message: "Number of answers provided do not match the number that appear in answer key."}.to_json unless answer_key.length == answer.length
 
-    # count # of matches
+    # count occurences of matching answers
     score = 0
-    answer_key.each_with_index { |ans, idx| score += ans == answers[idx].downcase().gsub(/\s+/, "") ? 1 : 0 }
+    answer_key.each_with_index { |ans, idx| score += 1 unless ans != answers[idx].downcase().gsub(/\s+/, "")  }
 
     # update this quiz data
     user_ref = nil
