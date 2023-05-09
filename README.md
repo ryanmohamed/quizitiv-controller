@@ -28,5 +28,5 @@
 --- 
 ### Dev Log 🚧
 **05-08-2023 9:08PM**
-  - [x] Capitalization issue with quiz submission. 
+  - [x] Capitalization and whitespace issue with quiz submission. 
 ---
