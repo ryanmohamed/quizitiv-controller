@@ -27,6 +27,6 @@
     Sensitive data, read environment variables pushed to Heroku. 
 --- 
 ### Dev Log 🚧
-** 05-08-2023 9:08PM
+**05-08-2023 9:08PM**
   - [] Capitalization issue with quiz submission. 
 ---
