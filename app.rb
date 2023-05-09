@@ -126,14 +126,14 @@ post '/submit_rating' do # max 2 reads 2 writes
 
     # update user's individual score rating, for quick reloads in view
     user_scores = user_snapshot.data[:scores]
-    print user_snapshot.data[:xp]
+    new_xp = user_snapshot.data[:xp] + 20
     halt 400, { message: "User has never taken quiz before or has rated it already."}.to_json unless user_scores.any? {|score_record| score_record[:id] == quiz_id and score_record[:rating].to_i == 0 }
 
     idx = user_scores.find_index {|score_record| score_record[:id] == quiz_id }
     new_score = { id: quiz_id, score: user_scores[idx][:score], rating: rating }
     user_scores[idx] = new_score
     begin
-        user_ref.set( {scores: user_scores}, merge: true )
+        user_ref.set( {scores: user_scores, xp: new_xp}, merge: true )
     rescue => e
         halt 500, { message: "Error: #{e.message}" }.to_json
     end
