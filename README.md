@@ -28,8 +28,8 @@
 --- 
 ### Dev Log 🚧
 **05-08-2023 9:08PM**
-  - [x] Capitalization and whitespace issue with quiz submission. 
-  - [x] Server should return answer key after scoring has been performed. 
-  - [x] See intersection issue
-  - [ ] XP boost on rating
+  - [x] ~~Capitalization and whitespace issue with quiz submission.~~ 
+  - [x] ~~Server should return answer key after scoring has been performed.~~ 
+  - [x] ~~See intersection issue~~
+  - [x] ~~XP boost on rating~~
 ---
