@@ -67,13 +67,8 @@ post '/submit_answers' do
     # remove all whitespace and downcase both operands
     answer_key = Array.new
     quiz_data[:questions].each { |question| answer_key.push (question[:answer].downcase().gsub(/\s+/, "") ) }
-    
-    # if # of answers != answer_key
-    halt 400, { message: "Number of answers provided do not match the number that appear in answer key."}.to_json unless answer_key.length == answer.length
 
-    # count occurences of matching answers
-    score = 0
-    answer_key.each_with_index { |ans, idx| score += 1 unless ans != answers[idx].downcase().gsub(/\s+/, "")  }
+    score = (answer_key & answers.map! { |answer| answer.downcase().gsub(/\s+/, "") } ).length # take intersection of the two arrays
 
     # update this quiz data
     user_ref = nil
