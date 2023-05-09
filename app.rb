@@ -64,9 +64,10 @@ post '/submit_answers' do
     quiz_data = quiz_snapshot.data
 
     # fetch answers from firebase and count correct answers (can possibly replace with some kind of count function)
+    # remove all whitespace and downcase both operands
     answer_key = Array.new
-    quiz_data[:questions].each { |question| answer_key.push (question[:answer].downcase()) }
-    score = (answer_key & answers.map! { |answer| answer.downcase() } ).length # take intersection of the two arrays
+    quiz_data[:questions].each { |question| answer_key.push (question[:answer].downcase().gsub(/\s+/, "") ) }
+    score = (answer_key & answers.map! { |answer| answer.downcase().gsub(/\s+/, "") } ).length # take intersection of the two arrays
 
     # update this quiz data
     user_ref = nil
