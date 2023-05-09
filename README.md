@@ -28,5 +28,6 @@
 --- 
 ### Dev Log 🚧
 **05-08-2023 9:08PM**
-  - [ ] Capitalization issue with quiz submission. 
+  - [x] Capitalization and whitespace issue with quiz submission. 
+  - [ ] Server should return answer key after scoring has been performed. 
 ---
