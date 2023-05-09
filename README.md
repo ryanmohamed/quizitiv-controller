@@ -31,4 +31,5 @@
   - [x] Capitalization and whitespace issue with quiz submission. 
   - [x] Server should return answer key after scoring has been performed. 
   - [x] See intersection issue
+  - [ ] XP boost on rating
 ---
