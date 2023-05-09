@@ -126,6 +126,7 @@ post '/submit_rating' do # max 2 reads 2 writes
 
     # update user's individual score rating, for quick reloads in view
     user_scores = user_snapshot.data[:scores]
+    print user_snapshot.data[:xp]
     halt 400, { message: "User has never taken quiz before or has rated it already."}.to_json unless user_scores.any? {|score_record| score_record[:id] == quiz_id and score_record[:rating].to_i == 0 }
 
     idx = user_scores.find_index {|score_record| score_record[:id] == quiz_id }
