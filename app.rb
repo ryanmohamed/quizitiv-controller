@@ -71,7 +71,7 @@ post '/submit_answers' do
     # halt 400 { message: "Number of answers provided do not match the number that appear in answer key."}.to_json unless answer_key.length == answer.length
 
     score = 0
-    answer_key.each_with_index { |ans, idx| score += 1 unless ans != answer.downcase().gsub(/\s+/, "")  }
+    # answer_key.each_with_index { |ans, idx| score += 1 unless ans != answer.downcase().gsub(/\s+/, "")  }
 
     
 
