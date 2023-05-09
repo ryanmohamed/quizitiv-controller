@@ -100,7 +100,7 @@ post '/submit_answers' do
     end
 
     content_type :json
-    return { message: s, score: "#{score}"}.to_json
+    return { message: s, score: "#{score}", answers: answer_key }.to_json # return answer key for user experience
 end
 
 post '/submit_rating' do # max 2 reads 2 writes
