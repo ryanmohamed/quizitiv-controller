@@ -29,5 +29,6 @@
 ### Dev Log 🚧
 **05-08-2023 9:08PM**
   - [x] Capitalization and whitespace issue with quiz submission. 
-  - [ ] Server should return answer key after scoring has been performed. 
+  - [x] Server should return answer key after scoring has been performed. 
+  - [ ] See test case ```answers = ['a','johnathan      math', 'a'] answer_key = ['a','johnathanmath', 'a']
 ---
